@@ -1,0 +1,12 @@
+title: "Current projects overview"
+footer:
+  text: MMA meeting, Trifels
+  bold:
+    - MMA meeting
+author: Mohammed Elwardi Fadeli
+time: Sept. 2024
+logo:
+  image: nhr-tu-logo.png
+  scale: 0.6
+base_url: https://foamscience.github.io/presentation-example
+thanks: "THANK YOU!"

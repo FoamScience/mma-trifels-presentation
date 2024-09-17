@@ -1,0 +1,843 @@
+defaults:
+  - meta: config.yaml
+  - default_styling: config.yaml
+  - _self_
+
+version: 0.0.2
+
+slides:
+
+  - title: Current projects overview
+    number: "0.0"
+    content:
+      - type: items
+        bullets:
+          - Meshless methods - status
+          - blastAMR - An efficient LB/AMR framework
+          - HPC-focused Apptainer containers
+          - ML with OpenFOAM through SmartSim
+          - Optimization of OpenFOAM cases - foamBO
+          - Unit testing for OpenFOAM code - foamUT
+          - OpenFOAM Training - parallel programming
+        distance: 5
+        anchor: "{{ title }}"
+
+  - title: Meshless methods - status
+    number: "1.0"
+    content:
+      - type: text
+        text: "Planned Features:"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Implicit Strong-form equations for some fidelity
+          - Hence, precise boundary condition handling
+          - OpenFOAM-like API
+          - "Focus: Radial Basis Functions and friends"
+          - Applications include FSI, Free-surface flow, Biomedical engineering
+        weights:
+          - text: "Strong-form"
+            weight: BOLD
+          - text: "Strong-form"
+            weight: BOLD
+        distance: 2
+        anchor: "{{ last }}"
+      - type: reset
+      - type: text
+        text: "Implemented decisions:"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - CPU or GPU-focused? -> FoamScience/LazyEvaluation-OpenFOAM-Exp
+          - Domain nodes creation from STL files -> filling, relaxation, refinement
+          - Equation operators (div, laplacian)
+          - Multiphysics design, natural domain interfaces -> Tracking/Detection?
+          - Partial boundary handling (FixedValue, ZeroGradient)
+          - "!! non-trivial MPI comms !! -> Similar to OpenFOAM's design"
+        weights:
+          - text: CPU
+            weight: BOLD
+        colors:
+          - text: FoamScience/LazyEvaluation-OpenFOAM-Exp
+            color: self.secondary_color
+        distance: 2
+        anchor: "{{ last }}"
+      - type: reset
+
+  - title: blastAMR - An efficient LB/AMR framework
+    number: "2.0"
+    content:
+      - type: image 
+        image: blastamr-qr.png
+        scale: 0.4
+        to_edge: RIGHT
+        no_next_slide: true
+      - type: text
+        text: "github.com/STFS-TUDa/blastAMR"
+        color: self.secondary_color
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: text
+        text: "Implemented Features:"
+        next_to:
+          target: "{{ title }}"
+          dir: 3*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - OpenCFD OpenFOAM support
+          - Well tested, efficient load-balancer
+          - Coupled boundary condition handling
+          - Very Flexible refinement criteria
+          - AMR-protected branches
+        distance: 2
+        anchor: "{{ last }}"
+      - type: text
+        text: "Known Issues:"
+        next_to:
+          target: "{{ last }}"
+          dir: 2*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - SurfaceSampling and LB
+          - Turbulence models and AMR/LB -> protect branches
+        distance: 2
+        anchor: "{{ last }}"
+      - type: reset
+      - type: plot
+        csv_file: amr.csv
+        axes_color: WHITE
+        x_length: 4
+        x_range: [0, 1140]
+        y_length: 4
+        y_range: [0, 20]
+        y_axis_label: "Execution time (hrs)"
+        columns: [ "TimeSteps", "Static fine mesh", "AMR/LB" ]
+        colors:
+          "Static fine mesh": self.warn_color
+          "AMR/LB": self.main_color
+        kind: line
+        labels:
+          "Static fine mesh": 
+            shift: 2*LEFT+2*UP
+        to_edge: LEFT
+      - type: svg
+        image: surprised.svg
+        color: self.main_color
+        height: 0.6
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*RIGHT
+        shift: 2*LEFT+DOWN
+        no_next_slide: true
+      - type: text
+        text: 30 mins
+        color: self.main_color
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*RIGHT
+      - type: text
+        text: "H2 free-propagating flame:"
+        next_to:
+          target: "{{ last }}"
+          dir: 4.5*RIGHT
+        shift: 3*UP
+        no_next_slide: true
+      - type: items
+        bullets:
+          - 200 cores, 32M cells originally
+          - AMR -> ~600k cells (2%)
+          - Max allowed imbalance -> 20%
+          - Max refinement level -> 4
+          - Refine upper 50% of grad(T) range
+          - Comparable results accuracy
+          - Customized reactingFoam solver
+        distance: 2
+        anchor: "{{ last }}"
+      - type: reset
+      - type: video
+        video: "h2flame.mp4"
+        height: 5.5
+        speed: 1.0
+        to_edge: LEFT
+      - type: text
+        text: 2% is a bit extreme
+        font_size: "{{ small_size }}"
+        next_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: text
+        text: no buffer refinement!
+        font_size: "{{ small_size }}"
+        next_to:
+          target: "{{ last }}"
+          dir: DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: LEFT
+      - type: reset
+      - type: video
+        video: "h2injection.mp4"
+        height: 5.5
+        speed: 1.0
+        to_edge: LEFT
+      - type: text
+        text: A more realistic case
+        next_to:
+          target: "{{ last }}"
+          dir: RIGHT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Multiple criteria
+          - 20% of fine mesh
+          - 16hrs -> 2hrs
+        distance: 3
+        anchor: "{{ last }}"
+      - type: reset
+      - type: text
+        text: "Next features / Open issues:"
+        next_to:
+          target: "{{ title }}"
+          dir: 3*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - CPU-time based load-balancing -> HAVE TO override MPI calls on library loads...
+          - Particle-cloud LB -> currently working only with a subset of cloud types...
+          - reconstructPar is buggy -> recommend to use distributePar...
+          - Custom boundary conditions need to take care not to cache own face lists...
+          - Only the PolyRefiner is well tested -> no HexRefiner ATM
+        colors:
+          - text: "->"
+            color: self.main_color
+        distance: 2
+        anchor: "{{ last }}"
+
+  - title: HPC-focused Apptainer containers
+    number: "3.0"
+    content:
+      - type: text
+        text: "Why would you want containers?"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Control over software versions...
+          - Different build artifacts - Debug, Experimentation ...
+          - Pre-release packaging for HPC, no compiling on clusters
+          - Isolated environment for feature testing
+          - Reduced local clutter of installed software
+        distance: 3
+        anchor: "{{ last }}"
+      - type: reset
+      - type: image 
+        image: apptainer-qr.png
+        scale: 0.4
+        to_edge: RIGHT
+        shift: DOWN
+        no_next_slide: true
+      - type: text
+        text: "github.com/FoamScience/openfoam-apptainer-packaging"
+        color: self.secondary_color
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: text
+        text: "Quick feature run-down:"
+        next_to:
+          target: "{{ title }}"
+          dir: 3*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Automated, configuration-based mechanisms
+          - Containers work natively on SLURM
+          - Can accept your own base containers
+          - Can host your project containers on your repo
+          - With arbitrary build-args for project containers
+          - Detailed metadata collection for containers
+          - To be adopted by Lichtenberg Infrastructure team
+        distance: 2
+        anchor: "{{ last }}"
+      - type: reset
+      - type: code
+        language: yaml
+        line_numbers: true
+        code: |
+          containers:
+            basic:
+              esi-openfoam:
+                os: #<- base image
+                  distro: ubuntu
+                  version: 24.04
+                mpi: #<- MPI setup
+                  implementation: openmpi
+                  version: 4.1.5
+                framework:
+                  definition: com-openfoam
+                  version: 2312
+        to_edge: LEFT
+        shift: 0.5*UP
+      - type: code
+        language: yaml
+        line_numbers: true
+        line_number_from: 13
+        code: |
+          projects:
+            test: #<- arbitrary project
+              base_container: esi-openfoam
+              definition: projects/test.def
+              build_args: #<- arbitrary
+                branch:
+                  - master
+        to_edge: RIGHT
+        align_to:
+          target: "{{ last }}"
+          dir: UP
+      - type: code
+        language: shell
+        background: rectangle
+        line_numbers: false
+        code: |
+          ansible-playbook build.yaml --extra-vars "original_dir=$PWD" --extra-vars "@config.yaml" 
+        shift: 2.5*DOWN
+      - type: reset
+      - type: code
+        language: shell
+        background: rectangle
+        line_numbers: false
+        code: |
+          apptainer run containers/projects/test-master.sif info
+        shift: 2*UP
+      - type: code
+        language: json
+        line_numbers: true
+        code: |
+          {
+            "openmpi": { "version": "4.1.5" },
+            "openfoam": {
+              "fork": "com-openfoam", "branch": "default",
+              "commit": "default", "version": "2312"
+            },
+            "test": {
+              "ompi_test_bin": "/opt/OMPIFoam/ompiTest",
+              "foam_test_bin": "/opt/OMPIFoam/testOMPIFoam",
+              "branch": "master"
+            }
+          }
+        next_to:
+          target: "{{ last }}"
+          dir: DOWN
+      - type: reset
+      - type: code
+        language: shell
+        line_numbers: true
+        code: |
+          #------ Intended usage for cases
+          cd /path/to/openfoam/case/on/host/machine
+          # Apptainer sets CWD and inherits environment automatically
+          # -C ignores host environment
+          apptainer run -C container.sif "./Allclean"
+          apptainer run -C container.sif "./Allrun.prepare"
+          # --sharens is necessary for Hybrid MPI runs
+          # MPI implementation on host must match the one from the container
+          mpirun -n 16 apptainer run --sharens container.sif \\
+              "solverFoam -parallel"
+          #----------------------------------------------------------------#
+          #------ Intended usage for libraries/solvers
+          apptainer run container.sif wmake
+          # Your library compiles to FOAM_USER_LIBBIN?
+          # -> binary will be in your host home folder
+          # This needs persistent-overlays:
+          apptainer run container.sif "FOAM_USER_LIBBIN=\$FOAM_LIBBIN wmake"
+
+  - title: "ML with OpenFOAM through SmartSim"
+    number: "4.0"
+    content:
+      - type: image 
+        image: smartsim-qr.png
+        scale: 0.4
+        to_edge: RIGHT
+        no_next_slide: true
+      - type: text
+        text: "github.com/OFDataCommittee/openfoam-smartsim"
+        color: self.secondary_color
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: text
+        text: "Features overview:"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - An effort from the Data-Driven Modelling SIG
+          - Bridges ML Databases/Algorithms with OpenFOAM
+          - Generic, layered, and well-tested API
+          - Ready-to-use function objects to send fields
+          - Made it into OpenFOAM v2406 release
+        distance: 3
+        anchor: "{{ last }}"
+      - type: reset
+      - type: text
+        text: "- Sample Function Object usage:"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: code
+        language: cpp
+        line_numbers: true
+        code: |
+          functions {
+            pUPhi {
+              type fieldsToSmartRedis;
+              libs ("libsmartredisFunctionObjects.so");
+              // fields to send, lumped together
+              fields (p U phi);
+              // what parts of the fields to send?
+              patches (internal inlet);
+            }
+          }
+        next_to:
+          target: "{{ last }}"
+          dir: DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: LEFT
+      - type: reset
+      - type: text
+        text: "- Sample API usage:"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: code
+        language: cpp
+        line_numbers: true
+        code: |
+          class fieldsToSmartRedisFunctionObject
+          :
+              public fvMeshFunctionObject,
+              public smartRedisClient
+          {
+          protected:
+                  wordList fields_;
+                  wordList patches_;
+          // -- some more code
+          };
+          // -- in ::execute()
+          updateNamingConventionState();
+          sendGeometricFields(fields_, patches_);
+        next_to:
+          target: "{{ last }}"
+          dir: DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: LEFT
+
+  - title: "Optimization of OpenFOAM cases - foamBO"
+    number: "5.0"
+    content:
+      - type: image 
+        image: foambo-qr.png
+        scale: 0.4
+        to_edge: RIGHT
+        no_next_slide: true
+      - type: text
+        text: "github.com/FoamScience/OpenFOAM-Multi-Objective-Optimization"
+        color: self.secondary_color
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: text
+        text: "Features overview:"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Configuration-based, no Bayesian code to write
+          - Works on a RUNNABLE OpenFOAM case, no templates
+          - Objective computation through shell commands
+          - Bayesian algorithms from ax-platform
+          - Stopping strategies based on PROBABILITY of improvement
+          - Feature importance to each objective
+        distance: 2
+        weights:
+          - text: Configuration
+            weight: BOLD
+          - text: RUNNABLE
+            weight: BOLD
+          - text: PROBABILITY of improvement
+            weight: BOLD
+        anchor: "{{ last }}"
+      - type: reset
+      - type: text
+        text: "Annular Thermal Mixer optimization (~15k sized search space):"
+        next_to:
+          target: "{{ title }}"
+          dir: 3*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - number of rotor blades [3, 6]
+          - rotor blade radius [0.01, 0.02]
+          - rotor blade height [0.03, 0.05]
+          - rotor blade tilt angle [0, 15]
+        distance: 2
+        anchor: "{{ last }}"
+      - type: text
+        text: "Optimizing for:"
+        next_to:
+          target: "{{ last }}"
+          dir: 2*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Power consumption
+          - Mixing quality
+          - Blade durability
+        distance: 2
+        anchor: "{{ last }}"
+      - type: image 
+        image: mixer-qr.png
+        scale: 0.4
+        to_edge: RIGHT
+        no_next_slide: true
+      - type: text
+        text: "github.com/FoamScience/mixer-bayesian-optimization"
+        color: self.secondary_color
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: text
+        text: "Converges in under 70 trials! 4 in-parallel!"
+        color: self.main_color
+        no_next_slide: true
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: text
+        text: "Probability of improvement threshold: 1%"
+        color: self.main_color
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: reset
+      - type: plot
+        csv_file: objectives.csv
+        axes_color: WHITE
+        x_length: 10
+        x_range: [0, 70]
+        x_step: 10
+        y_length: 3
+        y_range: [0.0, 1.0]
+        y_step: 0.2
+        y_axis_label: "Normalized objective"
+        columns: [ "Trial", "BladeDurability(r)", "MixingQuality(r)", "PowerConsumption" ]
+        colors:
+          "BladeDurability(r)": self.main_color
+          "MixingQuality(r)": self.secondary_color
+          "PowerConsumption": self.important_color
+        labels:
+          "MixingQuality(r)":
+            shift: 0.5*UP
+          "PowerConsumption":
+            shift: UP
+        kind: scatter
+
+  - title: "Unit testing for OpenFOAM code - foamUT"
+    number: "6.0"
+    content:
+      - type: text
+        text: "Feature overview:"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Supports all OpenFOAM forks, behaves natively as a "solver"
+          - Provides a cavity mesh, but accepts custom cases
+          - Write Only testing code, no environment worries
+          - Host tests with your code, run them seamlessly in CI
+          - PARALLEL and SERIAL tests
+        distance: 3
+        anchor: "{{ last }}"
+      - type: reset
+      - type: diagram
+        steps:
+          - type: group
+            last_is_group: false
+            kind: "rectangle"
+            color: self.warn_color
+            opacity: 0.1
+            padding: 1.6
+            label:
+              type: "text"
+              text: your repository
+              color: self.warn_color
+              next_to:
+                target: "{{ last }}"
+                dir: 1.5*UP
+            steps:
+              - type: group
+                last_is_group: true
+                kind: "rectangle"
+                color: self.main_color
+                padding: 1.5
+                label:
+                  type: "text"
+                  text: "tests"
+                  color: self.main_color
+                  next_to:
+                    target: "{{ last }}"
+                    dir: 1.5*DOWN
+                steps:
+                  - type: rectangle
+                    text: Make
+                    align_to:
+                      target: "{{ title }}"
+                      dir: LEFT
+                    shift: DOWN+RIGHT
+                  - type: rectangle
+                    text: myClassTests.C
+                    next_to:
+                      target: "{{ last }}"
+                      dir: 4*RIGHT
+              - type: rectangle
+                text: src/libs
+                color: self.secondary_color
+                next_to:
+                  target: "{{ last }}"
+                  dir: 3*UP
+                arrow_from: "{{ last }}"
+                arrow_color: self.secondary_color
+          - type: rectangle
+            text: Test driver
+            color: self.important_color
+            opacity: 0.0
+            next_to:
+              target: "{{ last }}"
+              dir: 3*RIGHT
+            arrow_from: "{{ last }}"
+            arrow_color: self.important_color
+          - type: rectangle
+            text: OpenFOAM cases
+            color: self.warn_color
+            opacity: 0.0
+            next_to:
+              target: "{{ last }}"
+              dir: 2*RIGHT
+            arrow_from: "{{ last }}"
+            arrow_color: self.warn_color
+      - type: reset
+      - type: code
+        language: cpp
+        line_numbers: true
+        code: |
+          #include "baseModel.H" //<+-- only base header is included
+          TEST_CASE
+          (
+              "all concrete baseModels must be OK", "[cavity][serial][parallel]"
+          ) {
+            dictionary config; //<+-- To configure the schema generation
+            auto concrete = GENERATE(
+              "concrete1",
+              "concrete2"
+            );
+            config.set("baseModelType", concrete);
+            auto skel = generateSchema<baseModel, ToConstruct>(config);
+            // expensive to construct, has heavy dependencies...
+            autoPtr<baseModel> bm = baseModel::New(skel, mesh);
+            REQUIRE(bm->isEverythingOK());
+          }
+        steps:
+          - modification:
+            - 6:  "    "
+            - 11: "  //<+-- Tedious Setup"
+            - 12: "  //<+-- and will have to change on member mods"
+            - 14: "  autoPtr<baseModel> bm = baseModel::New(mesh);"
+      - type: reset
+      - type: image 
+        image: foamut-qr.png
+        scale: 0.4
+        to_edge: RIGHT
+        no_next_slide: true
+      - type: text
+        text: "github.com/FoamScience/foamUT"
+        color: self.secondary_color
+        next_to:
+          target: "{{ last }}"
+          dir: 0.5*DOWN
+        align_to:
+          target: "{{ last }}"
+          dir: RIGHT
+      - type: text
+        text: "Two important principles:"
+        weights:
+          - text: Two
+            weight: BOLD
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Production parity -> test code identical to solver
+          - Unit tests are (up-to-date) documentation
+          - Hit no disk, no network, no databases
+        distance: 3
+        anchor: "{{ last }}"
+      - type: text
+        text: "Current known issues:"
+        next_to:
+          target: "{{ last }}"
+          dir: 2*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - MPI race conditions -> timeouts -> no graceful termination
+        distance: 2
+        anchor: "{{ last }}"
+      - type: reset
+      - type: text
+        text: Success stories
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - Extensiveness - STFS-TUDa/blastAMR with customized matrix of OpenFOAM cases
+          - Hitting peripherials - OFDataCommittee/openfoam-smartsim with the SmartRedis database
+          - Experimentation - FoamScience/OpenMP-OpenFOAM-benchmarks
+          - Cross-platforming - FoamScience/block-matrices-benchmark
+          - Documentation and non-standard environment - FoamScience/openfoam-reflections
+          - Tutoring - Parallel programming workshop hands-on activities
+        colors:
+          - text: STFS-TUDa/blastAMR
+            color: self.secondary_color
+          - text: OFDataCommittee/openfoam-smartsim
+            color: self.secondary_color
+          - text: FoamScience/OpenMP-OpenFOAM-benchmarks
+            color: self.secondary_color
+          - text: FoamScience/block-matrices-benchmark
+            color: self.secondary_color
+          - text: FoamScience/openfoam-reflections
+            color: self.secondary_color
+        distance: 3
+        anchor: "{{ last }}"
+
+  - title: "OpenFOAM Training: Parallel programming"
+    number: "7.0"
+    content:
+      - type: text
+        text: "- 2-days online workshop"
+        next_to:
+          target: "{{ title }}"
+          dir: 4*DOWN
+        align_to:
+          target: "{{ title }}"
+          dir: LEFT
+        no_next_slide: true
+      - type: items
+        bullets:
+          - An NHR4CES activity; https://openfoam-parallelisation-course.github.io
+          - Twice a year (Apr., Oct.)
+          - Hands-on focused, 7 activities + 2 mini projects
+          - Github classroom for assignments, ~150 successful repos ATM
+          - Great feedback from the FEW participants
+          - Suggestions to ease up pre-requisites?
+        colors:
+          - text: https://openfoam-parallelisation-course.github.io
+            color: self.secondary_color
+        distance: 3
+        anchor: "{{ last }}"

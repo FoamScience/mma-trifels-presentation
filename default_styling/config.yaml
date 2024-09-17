@@ -1,0 +1,26 @@
+color_presets:
+  main: color.TEAL_A
+  bg: color.GRAY_E
+  secondary: "#6EEA57"
+  warn: color.YELLOW_C
+  important: color.RED_C
+  text: color.WHITE
+  opacity: 0.2
+font:
+  family: "Comic Code Ligatures"
+  very_small: 12
+  small: 16
+  mid: 20
+  big: 25
+itemize:
+  icon: "•"
+  distance: 1.5
+diagram:
+  buff: 0.3
+code:
+  line_spacing: 0.65
+  tabs: 4
+  background: window
+  style: manni
+camera:
+  frame_rate: 90
