@@ -3,7 +3,7 @@ defaults:
   - default_styling: config.yaml
   - _self_
 
-version: 0.0.2
+version: 0.0.3
 
 slides:
 
@@ -12,7 +12,7 @@ slides:
     content:
       - type: items
         bullets:
-          - Meshless methods - status
+          - Meshless methods - motivation/status
           - blastAMR - An efficient LB/AMR framework
           - HPC-focused Apptainer containers
           - ML with OpenFOAM through SmartSim
@@ -21,6 +21,42 @@ slides:
           - OpenFOAM Training - parallel programming
         distance: 5
         anchor: "{{ title }}"
+ 
+  - title: Meshless methods - motivation
+    number: "0.0"
+    hook:
+      name: sph
+      filename: hooks/sph.py
+      functions: sph_step
+      kernel_items:
+        type: items
+        bullets:
+          - VALID approximation
+          - Positive weighting
+          - NULL outside radius
+        distance: 2
+        anchor: "{{ last }}"
+      consistency_items:
+        type: items
+        bullets:
+          - 0th order consistency at risk! -> put things in matrices...
+          - 1st order consistency is even harder to maintain -> Particle order important!
+          - "Graphics people: dont care, accuracy still OK"
+          - "CFD people: order-recovery? ditch direct gradient and laplacian operators..."
+        distance: 2
+        weights:
+          - text: "CFD people:"
+            weight: BOLD
+          - text: "Graphics people:"
+            weight: BOLD
+        colors:
+          - text: "0th order"
+            color: self.main_color
+          - text: "1st order"
+            color: self.warn_color
+          - text: "->"
+            color: self.main_color
+        anchor: "{{ last }}"
 
   - title: Meshless methods - status
     number: "1.0"
@@ -42,8 +78,6 @@ slides:
           - "Focus: Radial Basis Functions and friends"
           - Applications include FSI, Free-surface flow, Biomedical engineering
         weights:
-          - text: "Strong-form"
-            weight: BOLD
           - text: "Strong-form"
             weight: BOLD
         distance: 2
@@ -75,7 +109,7 @@ slides:
         distance: 2
         anchor: "{{ last }}"
       - type: reset
-
+  
   - title: blastAMR - An efficient LB/AMR framework
     number: "2.0"
     content:
@@ -239,7 +273,7 @@ slides:
             color: self.main_color
         distance: 2
         anchor: "{{ last }}"
-
+  
   - title: HPC-focused Apptainer containers
     number: "3.0"
     content:
@@ -388,7 +422,7 @@ slides:
           # -> binary will be in your host home folder
           # This needs persistent-overlays:
           apptainer run container.sif "FOAM_USER_LIBBIN=\$FOAM_LIBBIN wmake"
-
+  
   - title: "ML with OpenFOAM through SmartSim"
     number: "4.0"
     content:
@@ -487,7 +521,7 @@ slides:
         align_to:
           target: "{{ last }}"
           dir: LEFT
-
+  
   - title: "Optimization of OpenFOAM cases - foamBO"
     number: "5.0"
     content:
@@ -620,7 +654,7 @@ slides:
           "PowerConsumption":
             shift: UP
         kind: scatter
-
+  
   - title: "Unit testing for OpenFOAM code - foamUT"
     number: "6.0"
     content:
@@ -815,7 +849,7 @@ slides:
             color: self.secondary_color
         distance: 3
         anchor: "{{ last }}"
-
+  
   - title: "OpenFOAM Training: Parallel programming"
     number: "7.0"
     content:

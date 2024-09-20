@@ -24,3 +24,8 @@ code:
   style: manni
 camera:
   frame_rate: 90
+runtime:
+  Transform: 0.5
+  FadeIn: 0.5
+  FadeOut: 0.5
+  DrawBorderThenFill: 0.8

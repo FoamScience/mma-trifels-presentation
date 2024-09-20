@@ -1,1 +1,1 @@
-manim-present==0.0.2
+manim-present==0.0.3
