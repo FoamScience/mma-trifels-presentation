@@ -23,7 +23,7 @@ slides:
         anchor: "{{ title }}"
  
   - title: Meshless methods - motivation
-    number: "0.0"
+    number: "1.0"
     hook:
       name: sph
       filename: hooks/sph.py
@@ -59,7 +59,7 @@ slides:
         anchor: "{{ last }}"
 
   - title: Meshless methods - status
-    number: "1.0"
+    number: "1.1"
     content:
       - type: text
         text: "Planned Features:"

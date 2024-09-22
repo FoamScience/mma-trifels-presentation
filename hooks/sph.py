@@ -5,6 +5,7 @@ viscosity = 0.1
 gravity = [0, -9.81]
 time_step = 0.01
 steps = 200
+u_scale = 0.4
 
 class Particle:
     def __init__(self, position, velocity, mass, density=1.0, is_boundary=False):
@@ -224,7 +225,7 @@ def sph_step(self, cfg, context):
         color = self.important_color if p.is_boundary else self.main_color
         start = p.position[0]*RIGHT+p.position[1]*UP
         particles.add(Dot(color=color).shift(start))
-        end = start + p.velocity[0]*RIGHT + p.velocity[1]*UP
+        end = start + context.get("u_scale")*p.velocity[0]*RIGHT + context.get("u_scale")*p.velocity[1]*UP
         arr = Arrow(start, end, buff=0.0, color=self.secondary_color)
         arr.set_opacity(0.3)
         velocities.add(arr)
@@ -262,6 +263,7 @@ def sph_step(self, cfg, context):
 
     self.next_slide()
     steps = context.get("steps")
+    u_scale = context.get("u_scale")
     for step in range(steps):
         simulation.step()
         new_particles = VGroup()
@@ -271,7 +273,7 @@ def sph_step(self, cfg, context):
             new_pos = pos[0]*RIGHT+pos[1]*UP
             color = self.important_color if simulation.particles[i].is_boundary else self.main_color
             new_particles.add(Dot(color=color).shift(new_pos))
-            new_end = new_pos + simulation.particles[i].velocity[0]*RIGHT + simulation.particles[i].velocity[1]*UP
+            new_end = new_pos + u_scale*simulation.particles[i].velocity[0]*RIGHT + u_scale*simulation.particles[i].velocity[1]*UP
             arr = Arrow(new_pos, new_end, buff=0.0, color=self.secondary_color)
             arr.set_opacity(0.3)
             new_velocities.add(arr)
