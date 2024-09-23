@@ -1,11 +1,11 @@
 domain_size = [6, 4.5]
 particle_spacing = 0.2
 particle_mass = 1.0
-viscosity = 0.1
+viscosity = 0.001
 gravity = [0, -9.81]
 time_step = 0.01
 steps = 200
-u_scale = 0.4
+u_scale = 0.2
 
 class Particle:
     def __init__(self, position, velocity, mass, density=1.0, is_boundary=False):
@@ -34,15 +34,21 @@ class SPHSimulation:
         for x in np.arange(0, 2, self.particle_spacing):
             for y in np.arange(0, 4, self.particle_spacing):
                 position = [x, y]
-                velocity = [5e-1, 0]
+                #velocity = [5e-1*((y/4)**2+(x-2)**2)/2, 0]
+                velocity = [0, 0]
                 particles.append(Particle(position, velocity, self.particle_mass))
         # boundary
-        for x in np.arange(-3 * self.particle_spacing, self.domain_size[0] + 3 * self.particle_spacing, self.particle_spacing):
-            for y in np.arange(-3 * self.particle_spacing, self.domain_size[1] + 3 * self.particle_spacing, self.particle_spacing):
+        for x in np.arange(-2 * self.particle_spacing, self.domain_size[0] + 2 * self.particle_spacing, self.particle_spacing):
+            for y in np.arange(-2 * self.particle_spacing, self.domain_size[1] + 2 * self.particle_spacing, self.particle_spacing):
                 if x < 0 or x > self.domain_size[0] or y < 0 or y > self.domain_size[1]:
                     position = [x, y]
                     velocity = [0, 0]
                     particles.append(Particle(position, velocity, self.particle_mass, is_boundary=True))
+        for x in np.arange(self.domain_size[0]/1.8,self.domain_size[0]/1.8+2*self.particle_spacing, self.particle_spacing ):
+            for y in np.arange(0, 4*self.particle_spacing, self.particle_spacing):
+                position = [x, y]
+                velocity = [0, 0]
+                particles.append(Particle(position, velocity, self.particle_mass, is_boundary=True))
         return particles
 
     def compute_density(self):
@@ -87,7 +93,7 @@ class SPHSimulation:
             p.position += self.time_step * p.velocity
 
     def kernel(self, r):
-        h = self.particle_spacing
+        h = 2*self.particle_spacing
         q = np.linalg.norm(r) / h
         if q <= 1:
             return (1 - q) ** 3
@@ -95,7 +101,7 @@ class SPHSimulation:
             return 0
 
     def kernel_gradient(self, r):
-        h = self.particle_spacing
+        h = 2*self.particle_spacing
         q = np.linalg.norm(r) / h
         if q <= 1:
             return -3 * (1 - q) ** 2 * r / (h * np.linalg.norm(r))
@@ -103,7 +109,7 @@ class SPHSimulation:
             return np.zeros(2)
 
     def kernel_laplacian(self, r):
-        h = self.particle_spacing
+        h = 2*self.particle_spacing
         q = np.linalg.norm(r) / h
         if q <= 1:
             return 6 * (1 - q) / (h ** 2)
@@ -242,7 +248,7 @@ def sph_step(self, cfg, context):
     algo_5 = Text(f"- Compute external forces: ").next_to(algo_3, DOWN).align_to(algo_3, LEFT)
     algo_6 = MathTex(r"m_i \mathbf{g}", font_size=self.m_size).next_to(algo_5, 0.5*RIGHT)
     algo_7 = Text(f"- Update velocities: ").next_to(algo_5, DOWN).align_to(algo_5, LEFT)
-    algo_8 = MathTex(r"\mathbf{v}_i += \frac{\Delta t}{m_i}(\mathbf{F}_i^\nu + \mathbf{F}_i^g)", font_size=self.m_size).next_to(algo_7, 0.5*RIGHT)
+    algo_8 = MathTex(r"\mathbf{v}_i^{*} = \mathbf{v}_i + \frac{\Delta t}{m_i}(\mathbf{F}_i^\nu + \mathbf{F}_i^g)", font_size=self.m_size).next_to(algo_7, 0.5*RIGHT)
     algo_9 = Text(f"- Compute pressure forces: ").next_to(algo_7, DOWN).align_to(algo_7, LEFT)
     algo_10 = MathTex(r"\Sigma_j \frac{\rho_i+\rho_j}{2}\mathbf{\nabla W_{ij}}", font_size=self.m_size).next_to(algo_9, 0.5*RIGHT)
     algo_11 = Text(f"- Correct velocities and positions:").next_to(algo_9, DOWN).align_to(algo_9, LEFT)

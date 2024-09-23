@@ -21,7 +21,7 @@ slides:
           - OpenFOAM Training - parallel programming
         distance: 5
         anchor: "{{ title }}"
- 
+
   - title: Meshless methods - motivation
     number: "1.0"
     hook:
