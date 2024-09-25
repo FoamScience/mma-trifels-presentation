@@ -157,7 +157,7 @@ slides:
       - type: items
         bullets:
           - SurfaceSampling and LB
-          - Turbulence models and AMR/LB -> protect branches
+          - Turbulence models and AMR/LB -> protect patches
         distance: 2
         anchor: "{{ last }}"
       - type: reset
@@ -403,7 +403,7 @@ slides:
       - type: reset
       - type: code
         language: shell
-        line_numbers: true
+        line_numbers: false
         code: |
           #------ Intended usage for cases
           cd /path/to/openfoam/case/on/host/machine
@@ -415,7 +415,10 @@ slides:
           # MPI implementation on host must match the one from the container
           mpirun -n 16 apptainer run --sharens container.sif \\
               "solverFoam -parallel"
-          #----------------------------------------------------------------#
+      - type: code
+        language: shell
+        line_numbers: false
+        code: |
           #------ Intended usage for libraries/solvers
           apptainer run container.sif wmake
           # Your library compiles to FOAM_USER_LIBBIN?
@@ -488,6 +491,7 @@ slides:
         align_to:
           target: "{{ last }}"
           dir: LEFT
+        shift: 2*RIGHT
       - type: reset
       - type: text
         text: "- Sample API usage:"
@@ -521,6 +525,7 @@ slides:
         align_to:
           target: "{{ last }}"
           dir: LEFT
+        shift: 2*RIGHT
   
   - title: "Optimization of OpenFOAM cases - foamBO"
     number: "5.0"
@@ -753,22 +758,22 @@ slides:
           (
               "all concrete baseModels must be OK", "[cavity][serial][parallel]"
           ) {
-            dictionary config; //<+-- To configure the schema generation
+            dictionary config; //<!-- To configure the schema generation
             auto concrete = GENERATE(
               "concrete1",
               "concrete2"
             );
-            config.set("baseModelType", concrete);
-            auto skel = generateSchema<baseModel, ToConstruct>(config);
+            config.set("baseModelType", concrete); //<!-- set model
+            auto skel = generateSchema<baseModel, ToConstruct>(config); //<!--?
             // expensive to construct, has heavy dependencies...
-            autoPtr<baseModel> bm = baseModel::New(skel, mesh);
+            autoPtr<baseModel> bm = baseModel::New(skel, mesh); //<!--?
             REQUIRE(bm->isEverythingOK());
           }
         steps:
           - modification:
             - 6:  "    "
             - 11: "  //<+-- Tedious Setup"
-            - 12: "  //<+-- and will have to change on member mods"
+            - 12: "  //<+-- and will have to change on member modification"
             - 14: "  autoPtr<baseModel> bm = baseModel::New(mesh);"
       - type: reset
       - type: image 

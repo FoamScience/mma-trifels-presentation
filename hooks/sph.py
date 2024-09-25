@@ -195,12 +195,14 @@ def sph_step(self, cfg, context):
     b1 = Line(b1s, b1e, stroke_width=5, color=self.warn_color)
     b2 = Line(b1e, b2e, stroke_width=5, color=self.warn_color)
     b3 = Line(b2e, b3e, stroke_width=5, color=self.warn_color)
+    b4 = Rectangle(width=4*spacing, height=8*spacing, color=self.warn_color)
+    b44 = BackgroundRectangle(b4, color=self.warn_color, fill_opacity=1).next_to(b2, 0).shift(4*spacing*RIGHT+4*spacing*UP)
     n1 = Arrow((b1s+b1e)/2, (b1s+b1e)/2+0.5*RIGHT, buff=0.0, color=self.warn_color)
-    n2 = Arrow((b1e+b2e)/2, (b1e+b2e)/2+0.5*UP, buff=0.0, color=self.warn_color)
+    n2 = Arrow((b1e+b2e)/3, (b1e+b2e)/3+0.5*UP, buff=0.0, color=self.warn_color)
     n3 = Arrow((b2e+b3e)/2, (b2e+b3e)/2+0.5*LEFT, buff=0.0, color=self.warn_color)
     omega = Tex("$$\Omega: \mathbf{v}\cdot\mathbf{n}_\Omega \geq 0$$", color=self.warn_color).shift(b2.get_center()+0.5*DOWN)
     nn = Tex("$\mathbf{n}$", color=self.warn_color).next_to(n2, 0.2*UP)
-    bounds = Group(b1,b2,b3, n1,n2,n3,nn, omega)
+    bounds = Group(b1,b2,b3,b44, n1,n2,n3,nn, omega)
     self.play(
         FadeIn(bounds.shift(graph_shift), run_time=self.fadein_rt),
         FadeIn(time, run_time=self.fadein_rt),
@@ -293,14 +295,14 @@ def sph_step(self, cfg, context):
     self.keep_only_objects(self.layout)
 
     cons_0 = Text(f"Nice visuals and all, but...").next_to(self.layout[0], 2.5*DOWN).align_to(self.layout[0], LEFT)
-    cons_1_math = r"\Sigma_j{F_j\frac{m_j}{\rho_j}W(\mathbf{x_i}-\mathbf{x_j}, h)} \approx \int \frac{F(\mathbf{x}^{'})}{\rho(\mathbf{x}^{'})}W(\mathbf{x}-\mathbf{x^{'}}, h)dm^{'}"
-    cons_1 = MathTex(cons_1_math, font_size=self.b_size).next_to(cons_0, DOWN).align_to(cons_0, LEFT)
+    #cons_1_math = r"\Sigma_j{F_j\frac{m_j}{\rho_j}W(\mathbf{x_i}-\mathbf{x_j}, h)} \approx \int \frac{F(\mathbf{x}^{'})}{\rho(\mathbf{x}^{'})}W(\mathbf{x}-\mathbf{x^{'}}, h)dm^{'}"
+    #cons_1 = MathTex(cons_1_math, font_size=self.b_size).next_to(cons_0, DOWN).align_to(cons_0, LEFT)
     order_0 = r"\Sigma_j{\frac{m_j}{\rho_j}W_{ij}}"
     order_1 = r"\Sigma_j{\frac{m_j}{\rho_j}(\mathbf{x}_j-\mathbf{x}_i)W_{ij}}"
     cons_2_math = r"\Sigma_j{F_j\frac{m_j}{\rho_j}W(\mathbf{x_i}-\mathbf{x_j}, h)} = F_i " + order_0 + r" + \nabla F_i \cdot " + order_1 + r" + \mathcal{O}(||\mathbf{r}||^2)"
-    cons_2 = MathTex(cons_2_math, font_size=self.b_size, tex_to_color_map={order_0: self.main_color, order_1: self.warn_color}).next_to(cons_1, DOWN).align_to(cons_1, LEFT)
+    cons_2 = MathTex(cons_2_math, font_size=self.b_size, tex_to_color_map={order_0: self.main_color, order_1: self.warn_color}).next_to(cons_0, DOWN).align_to(cons_0, LEFT)
     self.play(
-        FadeIn(cons_0, cons_1, cons_2,
+        FadeIn(cons_0, cons_2,
                run_time=self.fadein_rt)
     )
     self.last = cons_2
